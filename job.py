@@ -37,10 +37,10 @@ def get_codecs(fname):
 
 
 def transcode(fname):
-    vcodec, acodec = convert_to_ffmpeg_args(*get_codecs(test))
+    vcodec, acodec = convert_to_ffmpeg_args(*get_codecs(fname))
     path, _ = os.path.splitext(fname)
     outname = f"{path}.webm"
-    if vcodec != "copy" and acodec != "copy":
+    if vcodec != "copy" or acodec != "copy":
         cmd = f"ffmpeg -i {fname} -vcodec {vcodec} -acodec {acodec} {outname}"
     stdout = sub.check_output(cmd, shell=True)
     return stdout
@@ -60,6 +60,24 @@ def mark_for_deletion(fname):
     os.rename(fname, outname)
 
 
+def get_targets(dirname):
+    files = os.listdir(dirname)
+    files = list(map(lambda f: os.path.join(dirname, f), files))
+    files = [f for f in files if os.path.isfile(f)]
+    return files
+
+
+def main(dirname):
+    targets = get_targets(dirname)
+    for f in targets:
+        try:
+            transcode(f)
+            mark_for_deletion(f)
+        except ffmpeg._run.Error
+            continue
+
+
 if __name__ == '__main__':
-    test = '/array/mark/videos/VID_20211215_170615~2.mp4'
-    print(transcode(test))
+    target_dirs = ['/array/mark/videos']
+    for d in target_dirts:
+        main(d)
