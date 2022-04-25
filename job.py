@@ -50,7 +50,7 @@ def mark_for_deletion(fname):
     '''
     Moves a file to an in-place archive directory for future deletion.
     '''
-    directory = os.dirname(os.path.abspath(fname))
+    directory = os.path.dirname(os.path.abspath(fname))
     archive_dir = 'archive'
     try:
         os.mkdir(os.path.join(directory, archive_dir))
