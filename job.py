@@ -3,6 +3,7 @@
 
 import ffmpeg
 import subprocess as sub
+import os
 
 
 def convert_to_ffmpeg_args(video_codec, audio_codec):
@@ -42,7 +43,23 @@ def transcode(fname):
     if vcodec != "copy" and acodec != "copy":
         cmd = f"ffmpeg -i {fname} -vcodec {vcodec} -acodec {acodec} {outname}"
     stdout = sub.check_output(cmd, shell=True)
+    return stdout
+
+
+def mark_for_deletion(fname):
+    '''
+    Moves a file to an in-place archive directory for future deletion.
+    '''
+    directory = os.dirname(os.path.abspath(fname))
+    archive_dir = 'archive'
+    try:
+        os.mkdir(os.path.join(directory, archive_dir))
+    except FileExistsError:
+        pass
+    outname = os.path.join(directory, archive_dir, os.path.basename(fname))
+    os.rename(fname, outname)
 
 
 if __name__ == '__main__':
-    test = '/array/mark/videos/chromium-test.webm'
+    test = '/array/mark/videos/VID_20211215_170615~2.mp4'
+    print(transcode(test))
