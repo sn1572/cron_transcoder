@@ -73,11 +73,11 @@ def main(dirname):
         try:
             transcode(f)
             mark_for_deletion(f)
-        except ffmpeg._run.Error
+        except ffmpeg._run.Error:
             continue
 
 
 if __name__ == '__main__':
     target_dirs = ['/array/mark/videos']
-    for d in target_dirts:
+    for d in target_dirs:
         main(d)
